@@ -27,7 +27,7 @@ namespace untitled_game {
     }
 
     void gl_widget_t::initializeGL() {
-        filesystem::path dae_file_path = "first.dae";
+        filesystem::path dae_file_path = "second.dae";
         if (filesystem::is_regular_file(dae_file_path)) {
             std::string dae_string;
             filesystem::load_string_file(dae_file_path, dae_string);
@@ -98,12 +98,12 @@ namespace untitled_game {
             vector <glm::vec3> positions;
             vector <glm::vec3> normals;
             vector<unsigned int> elements;
-            positions.push_back(glm::vec3(0.1f, 0.1f, 0.0f));
-            positions.push_back(glm::vec3(-0.1f, -0.1f, 0.0f));
-            positions.push_back(glm::vec3(-0.1f, 0.1f, 0.0f));
-            normals.push_back(glm::vec3(1.f, 0.f, 0.f));
-            normals.push_back(glm::vec3(0.f, 1.f, 0.f));
-            normals.push_back(glm::vec3(0.f, 0.f, 1.f));
+            positions.emplace_back(0.1f, 0.1f, 0.0f);
+            positions.emplace_back(-0.1f, -0.1f, 0.0f);
+            positions.emplace_back(-0.1f, 0.1f, 0.0f);
+            normals.emplace_back(1.f, 0.f, 0.f);
+            normals.emplace_back(0.f, 1.f, 0.f);
+            normals.emplace_back(0.f, 0.f, 1.f);
             elements.push_back(0);
             elements.push_back(1);
             elements.push_back(2);
@@ -121,10 +121,10 @@ namespace untitled_game {
             f->glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * elements.size(), &elements[0],
                             GL_STATIC_DRAW);
             f->glBindBuffer(GL_ARRAY_BUFFER, position_buffer_id);
-            f->glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, 0);
+            f->glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, nullptr);
             f->glEnableVertexAttribArray(0);
             f->glBindBuffer(GL_ARRAY_BUFFER, normal_buffer_id);
-            f->glVertexAttribPointer(1, 3, GL_FLOAT, 0, 0, 0);
+            f->glVertexAttribPointer(1, 3, GL_FLOAT, 0, 0, nullptr);
             f->glEnableVertexAttribArray(1);
             f->glBindVertexArray(0);
             init = true;
@@ -164,7 +164,7 @@ namespace untitled_game {
         f->glBindVertexArray(vao_id);
 
         //f->glDrawArrays(GL_TRIANGLES, 0, 3);
-        f->glDrawElements(GL_TRIANGLES,3,GL_UNSIGNED_INT,0);
+        f->glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
         f->glBindVertexArray(0);
         opengl_shader_program->release();
         update();

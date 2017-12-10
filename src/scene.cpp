@@ -26,7 +26,7 @@ joint_t::ptr scene_t::input_joint(const primitive_data::node_t &primitive_node, 
 }
 
 skeleton_t::ptr scene_t::input_skeleton(const primitive_data::node_t &primitive_node) {
-    if (primitive_node.child_nodes.size()) {
+    if (!primitive_node.child_nodes.empty()) {
         if (primitive_node.child_nodes.begin()->type == primitive_data::node_t::type_e::joint) {
             auto skeleton = make_shared<skeleton_t>();
             skeleton->transformation = primitive_node.transformation_matrix;
@@ -113,7 +113,7 @@ object_t::ptr scene_t::input_object(const primitive_data::node_t &primitive_node
                     uvcoords[position_index] = primitive_uvcoords[uvcoord_index];
                 }
             }
-            mesh->triangles_groups.back().element_count = elements.size();
+            mesh->triangles_groups.back().element_count = static_cast<GLuint>(elements.size());
             auto &element_buffer_id = mesh->triangles_groups.back().element_buffer_id;
             f->glGenBuffers(1, &element_buffer_id);
             f->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_id);
@@ -134,13 +134,13 @@ object_t::ptr scene_t::input_object(const primitive_data::node_t &primitive_node
             f->glBindVertexArray(triangle_group.vao_id);//!
             f->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangle_group.element_buffer_id);//!
             f->glBindBuffer(GL_ARRAY_BUFFER, mesh->position_buffer_id);
-            f->glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, 0);//!
+            f->glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, nullptr);//!
             f->glEnableVertexAttribArray(0);//!
             f->glBindBuffer(GL_ARRAY_BUFFER, mesh->normal_buffer_id);
-            f->glVertexAttribPointer(1, 3, GL_FLOAT, 0, 0, 0);//!
+            f->glVertexAttribPointer(1, 3, GL_FLOAT, 0, 0, nullptr);//!
             f->glEnableVertexAttribArray(1);//!
             f->glBindBuffer(GL_ARRAY_BUFFER, mesh->uvcoord_buffer_id);
-            f->glVertexAttribPointer(2, 2, GL_FLOAT, 0, 0, 0);//!
+            f->glVertexAttribPointer(2, 2, GL_FLOAT, 0, 0, nullptr);//!
             f->glEnableVertexAttribArray(2);//!
             f->glBindVertexArray(0);//!
         }
@@ -181,7 +181,7 @@ object_t::ptr scene_t::input_object(const primitive_data::node_t &primitive_node
                     uvcoords[position_index] = primitive_uvcoords[uvcoord_index];
                 }
             }
-            mesh->triangles_groups.back().element_count = elements.size();
+            mesh->triangles_groups.back().element_count = static_cast<GLuint>(elements.size());
             auto &element_buffer_id = mesh->triangles_groups.back().element_buffer_id;
             f->glGenBuffers(1, &element_buffer_id);
             f->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_id);
@@ -202,13 +202,13 @@ object_t::ptr scene_t::input_object(const primitive_data::node_t &primitive_node
             f->glBindVertexArray(triangle_group.vao_id);//!
             f->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangle_group.element_buffer_id);//!
             f->glBindBuffer(GL_ARRAY_BUFFER, mesh->position_buffer_id);
-            f->glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, 0);//!
+            f->glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, nullptr);//!
             f->glEnableVertexAttribArray(0);//!
             f->glBindBuffer(GL_ARRAY_BUFFER, mesh->normal_buffer_id);
-            f->glVertexAttribPointer(1, 3, GL_FLOAT, 0, 0, 0);//!
+            f->glVertexAttribPointer(1, 3, GL_FLOAT, 0, 0, nullptr);//!
             f->glEnableVertexAttribArray(1);//!
             f->glBindBuffer(GL_ARRAY_BUFFER, mesh->uvcoord_buffer_id);
-            f->glVertexAttribPointer(2, 2, GL_FLOAT, 0, 0, 0);//!
+            f->glVertexAttribPointer(2, 2, GL_FLOAT, 0, 0, nullptr);//!
             f->glEnableVertexAttribArray(2);//!
             f->glBindVertexArray(0);//!
         }
@@ -254,9 +254,9 @@ void scene_t::input_scene(const primitive_data::virsual_scene_t &primitive_virsu
 }
 
 static QOpenGLShaderProgram *opengl_shader_program;
-static GLuint attr_pos;
-static GLuint attr_col;
-static GLuint uniform_matrix;
+static int attr_pos;
+static int attr_col;
+static int uniform_matrix;
 
 static void render_object(object_t::ptr object, glm::mat4 PLM, int depth) {
     auto f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_0>();
@@ -272,7 +272,7 @@ static void render_object(object_t::ptr object, glm::mat4 PLM, int depth) {
                     //f->glUniformMatrix4fv(uniform_matrix, 1, 0, &object->transformation[0][0]);
                     f->glUniformMatrix4fv(uniform_matrix, 1, 0, &PLM[0][0]);
                     f->glBindVertexArray(triangles_group.vao_id);
-                    f->glDrawElements(GL_TRIANGLES, triangles_group.element_count, GL_UNSIGNED_INT, 0);
+                    f->glDrawElements(GL_TRIANGLES, triangles_group.element_count, GL_UNSIGNED_INT, nullptr);
                     f->glBindVertexArray(0);
                     opengl_shader_program->release();
                     break;
@@ -319,12 +319,11 @@ static void apply_modifiers(object_t::ptr object, int depth) {
                                         int joint_index = skeleton_modifier->joint_indices[sum1 + j];
                                         int weight_index = skeleton_modifier->weight_indices[sum1 + j];
                                         float weight = skeleton_modifier->weights[weight_index];
-                                        //TODO 骨骼动画　到底怎么搞　５５５５
                                         glm::vec4 outvj =
-                                                glm::vec4(skeleton_modifier->positions_with_BSM[i], 1.0f) *
+                                                skeleton_modifier->joints[joint_index]->world_transformation *
                                                 //glm::inverse(skeleton_modifier->inverse_bind_matrices[joint_index]) *
                                                 skeleton_modifier->inverse_bind_matrices[joint_index] *
-                                                skeleton_modifier->joints[joint_index]->world_transformation *
+                                                glm::vec4(skeleton_modifier->positions_with_BSM[i], 1.0f) *
                                                 weight;
                                         outv += outvj;
                                     }
@@ -365,7 +364,8 @@ static void calculate_joints_world_matrix(joint_t::ptr joint, glm::mat4 M, int d
     //    auto mat = glm::mat4(1,0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1);
     //    joint->world_transformation = joint->transformation * M;
     //}
-    joint->world_transformation = joint->transformation * M;
+    joint->world_transformation = M * joint->transformation;
+    //joint->world_transformation = joint->transformation * M;
     //glm::vec4 tmp = joint->world_transformation * glm::vec4(0.f, 0.f, 0.f, 1.f);
     //glm::vec3 tmp2 = glm::mat3(joint->world_transformation) * glm::vec3(1.f);
     //LOG_N << depth << " " << tmp.x << "\t" << tmp.y << "\t" << tmp.z << "\t" << tmp.w;
@@ -418,14 +418,14 @@ void scene_t::render() {
         uniform_matrix = opengl_shader_program->uniformLocation("uniform_matrix");
         init = true;
     }
-    static float tmp = M_PI_2 * 3;
+    static float tmp = static_cast<float>(M_PI_2 * 3);
     if (tmp > 2 * M_PI) {
         tmp = 0.f;
     } else {
         tmp += 0.01f;
     }
     glm::mat4 P = glm::perspective((float) M_PI / 3, 1.f, 0.1f, 100.f);
-    glm::mat4 L = glm::lookAt(glm::vec3(0.f, -9.f, 6.f),
+    glm::mat4 L = glm::lookAt(glm::vec3(1.f * cos(tmp), 1.f * sin(tmp), 2.f),
                               glm::vec3(0.f, 0.f, 2.f),
                               glm::vec3(0.f, 0.f, 1.f));
     for (auto &&skeleton :skeletons) {

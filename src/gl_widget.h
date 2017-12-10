@@ -26,9 +26,9 @@ namespace untitled_game {
 
     private:
         QOpenGLShaderProgram *opengl_shader_program;
-        GLuint attr_pos;
-        GLuint attr_col;
-        GLuint uniform_matrix;
+        int attr_pos;
+        int attr_col;
+        int uniform_matrix;
         int width, height;
     };
 }
