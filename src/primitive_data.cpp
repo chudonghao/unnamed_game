@@ -9,11 +9,11 @@ namespace untitled_game::primitive_data {
 
 node_t::node_t(type_e type) : type(type),/* location(), rotation_z(), rotation_y(), rotation_x(), scale(),*/
                               transformation_matrix(), child_nodes(), camera_instance(), geometry_instance(),
-                              light_instance(), controller_instance() {}
+                              light_instance(), controller_instances() {}
 
 node_t::node_t()
         : transformation_matrix(), type(), camera_instance(), geometry_instance(), light_instance(),
-          controller_instance(), child_nodes() {}
+          controller_instances(), child_nodes() {}
 
 virsual_scene_t::virsual_scene_t() : geometries(), nodes(), controllers(), skeleton_controller_datas() {}
 

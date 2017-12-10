@@ -96,7 +96,7 @@ namespace untitled_game::primitive_data {
         camera_t *camera_instance;
         geometry_t *geometry_instance;
         light_t *light_instance;
-        controller_t *controller_instance;
+        std::vector<controller_t*> controller_instances;
 
         std::list<node_t> child_nodes;
     };

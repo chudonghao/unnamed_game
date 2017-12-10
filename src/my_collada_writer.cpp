@@ -94,11 +94,11 @@ void my_collada_writer_t::process_node(primitive_data::node_t &primitive_node, C
         LOG_N << sb.str() << node->getName();
         sb << "\t";
         //TODO node有多个instance
-        if (node->getInstanceCameras().getCount()) {
+        if (!node->getInstanceCameras().empty()) {
             LOG_N << sb.str() << "instance camera:"
                   << node->getInstanceCameras()[0]->getInstanciatedObjectId().toAscii();
         }
-        if (node->getInstanceGeometries().getCount()) {
+        if (!node->getInstanceGeometries().empty()) {
             LOG_N << sb.str() << "instance geometry:" << node->getInstanceGeometries()[0]->getName();
             LOG_N << sb.str() << "instance geometry:"
                   << node->getInstanceGeometries()[0]->getMaterialBindings().getCount();
@@ -106,15 +106,17 @@ void my_collada_writer_t::process_node(primitive_data::node_t &primitive_node, C
                   << node->getInstanceGeometries()[0]->getInstanciatedObjectId().toAscii();
             primitive_node.geometry_instance = id_geometry_map[node->getInstanceGeometries()[0]->getInstanciatedObjectId()];
         }
-        if (node->getInstanceControllers().getCount()) {
+        if (!node->getInstanceControllers().empty()) {
             LOG_N << sb.str() << "instance controller:" << node->getInstanceControllers()[0]->getName();
             LOG_N << sb.str() << "instance controller:"
                   << node->getInstanceControllers()[0]->getMaterialBindings().getCount();
             LOG_N << sb.str() << "instance controller:"
                   << node->getInstanceControllers()[0]->getInstanciatedObjectId().toAscii();
-            primitive_node.controller_instance = id_controller_map[node->getInstanceControllers()[0]->getInstanciatedObjectId()];
+            for (int i = 0; i < node->getInstanceControllers().getCount(); ++i) {
+                primitive_node.controller_instances.push_back(id_controller_map[node->getInstanceControllers()[0]->getInstanciatedObjectId()]);
+            }
         }
-        if (node->getInstanceLights().getCount()) {
+        if (!node->getInstanceLights().empty()) {
             LOG_N << sb.str() << "instance light:"
                   << node->getInstanceLights()[0]->getInstanciatedObjectId().toAscii();
         }

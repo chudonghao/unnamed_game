@@ -149,11 +149,12 @@ object_t::ptr scene_t::input_object(const primitive_data::node_t &primitive_node
     }
     if (primitive_node.camera_instance) {
     }
-    if (primitive_node.controller_instance) {
+    if (!primitive_node.controller_instances.empty()) {
+        //TODO 多个controller_instance
         auto mesh = make_shared<mesh_t>();
         result = mesh;
         mesh->transformation = primitive_node.transformation_matrix;
-        auto &primitive_mesh = primitive_node.controller_instance->skin_controller.skin->mesh;
+        auto &primitive_mesh = primitive_node.controller_instances[0]->skin_controller.skin->mesh;
         auto &primitive_positions = primitive_mesh.positions;
         auto &primitive_normals = primitive_mesh.normals;
         auto &primitive_uvcoords = primitive_mesh.uvcoords;
@@ -214,7 +215,7 @@ object_t::ptr scene_t::input_object(const primitive_data::node_t &primitive_node
         }
         auto skeleton_modifier = make_shared<skeleton_modifier_t>();
         mesh->modifiers.push_back(skeleton_modifier);
-        auto &skin_controller = primitive_node.controller_instance->skin_controller;
+        auto &skin_controller = primitive_node.controller_instances[0]->skin_controller;
         skeleton_modifier->weights = skin_controller.data->weights;
         skeleton_modifier->inverse_bind_matrices = skin_controller.data->inverse_bind_matrices;
         skeleton_modifier->weight_indices = skin_controller.data->weight_indices;
@@ -425,7 +426,7 @@ void scene_t::render() {
         tmp += 0.01f;
     }
     glm::mat4 P = glm::perspective((float) M_PI / 3, 1.f, 0.1f, 100.f);
-    glm::mat4 L = glm::lookAt(glm::vec3(1.f * cos(tmp), 1.f * sin(tmp), 2.f),
+    glm::mat4 L = glm::lookAt(glm::vec3(4.f * cos(tmp), 4.f * sin(tmp), 2.f),
                               glm::vec3(0.f, 0.f, 2.f),
                               glm::vec3(0.f, 0.f, 1.f));
     for (auto &&skeleton :skeletons) {
