@@ -8,6 +8,50 @@
 
 namespace untitled_game {
 
+static void test(const COLLADABU::Math::Matrix4 &m) {
+    LOG_N << m[0][0] << " "
+          << m[0][1] << " "
+          << m[0][2] << " "
+          << m[0][3] << " "
+          << m[1][0] << " "
+          << m[1][1] << " "
+          << m[1][2] << " "
+          << m[1][3] << " "
+          << m[2][0] << " "
+          << m[2][1] << " "
+          << m[2][2] << " "
+          << m[2][3] << " "
+          << m[3][0] << " "
+          << m[3][1] << " "
+          << m[3][2] << " "
+          << m[3][3];
+}
+
+/**
+ * 函数存在的目的是确定转置场合
+ * @param m
+ * @return
+ */
+static glm::mat4 to_mat4(const COLLADABU::Math::Matrix4 &m) {
+    glm::mat4 result;
+    result[0][0] = m[0][0];
+    result[0][1] = m[0][1];
+    result[0][2] = m[0][2];
+    result[0][3] = m[0][3];
+    result[1][0] = m[1][0];
+    result[1][1] = m[1][1];
+    result[1][2] = m[1][2];
+    result[1][3] = m[1][3];
+    result[2][0] = m[2][0];
+    result[2][1] = m[2][1];
+    result[2][2] = m[2][2];
+    result[2][3] = m[2][3];
+    result[3][0] = m[3][0];
+    result[3][1] = m[3][1];
+    result[3][2] = m[3][2];
+    result[3][3] = m[3][3];
+    return result;
+}
 
 void my_collada_writer_t::cancel(const COLLADAFW::String &errorMessage) {
     LOG_N << "cancel";
@@ -36,14 +80,17 @@ void my_collada_writer_t::process_node(primitive_data::node_t &primitive_node, C
     for (int j = 0; j < deepth; ++j) {
         sb << "\t";
     }
+    primitive_node.transformation_matrix = glm::transpose(to_mat4(node->getTransformationMatrix()));
     if (node->getType() == COLLADAFW::Node::NodeType::JOINT) {
         primitive_node.type = primitive_data::node_t::type_e::joint;
-        primitive_node.transformation_matrix = *(const glm::tmat4x4<double> *) &(node->getTransformationMatrix().transpose()[0][0]);
+        LOG_N << "joint transform matrix:";
+        test(node->getTransformationMatrix());
         LOG_N << sb.str() << "jonit:" << node->getName() << ":" << node->getUniqueId().toAscii();
         id_joint_map[node->getUniqueId()] = &primitive_node;
     } else {
-        //TODO 矩阵在什么情况下需要转置（ps：卧槽）
-        primitive_node.transformation_matrix = *(const glm::tmat4x4<double> *) &(node->getTransformationMatrix().transpose()[0][0]);
+        LOG_N << "node transform matrix:";
+        test(node->getTransformationMatrix());
+
         LOG_N << sb.str() << node->getName();
         sb << "\t";
         //TODO node有多个instance
@@ -124,8 +171,8 @@ bool my_collada_writer_t::writeGeometry(const COLLADAFW::Geometry *geometry) {
                                                         (glm::vec3 *) (uvcoord_values->getData() +
                                                                        uvcoord_values->getCount()));
             for (int i = 0; i < mesh->getMeshPrimitives().getCount(); ++i) {
-                primitive_geometry.mesh.triangles_list.emplace_back();
-                auto &triangles = primitive_geometry.mesh.triangles_list.back();
+                primitive_geometry.mesh.triangles_groups.emplace_back();
+                auto &triangles = primitive_geometry.mesh.triangles_groups.back();
                 triangles.face_count = mesh->getMeshPrimitives()[i]->getFaceCount();
                 auto &position_indices = mesh->getMeshPrimitives()[i]->getPositionIndices();
                 auto &normal_indices = mesh->getMeshPrimitives()[i]->getNormalIndices();
@@ -187,6 +234,7 @@ bool my_collada_writer_t::writeAnimation(const COLLADAFW::Animation *animation) 
 
 bool my_collada_writer_t::writeAnimationList(const COLLADAFW::AnimationList *animationList) {
     LOG_N << "animation list:" << animationList->getUniqueId().toAscii();
+    animationList->getAnimationBindings();
     return true;
 }
 
@@ -199,9 +247,11 @@ bool my_collada_writer_t::writeSkinControllerData(const COLLADAFW::SkinControlle
     auto &weight_indices = skinControllerData->getWeightIndices();
     auto &joint_per_vertex = skinControllerData->getJointsPerVertex();
     auto &inverse_bind_matrices = skinControllerData->getInverseBindMatrices();
+    primitive_skeleton_controller_data.bind_shape_matrix = glm::transpose(
+            to_mat4(skinControllerData->getBindShapeMatrix()));
+    LOG_N << "skin controller data bind shape matrix:";
+    test(skinControllerData->getBindShapeMatrix());
 
-    primitive_skeleton_controller_data.bind_shape_matrix
-            = *(const glm::tmat4x4<double> *) &(skinControllerData->getBindShapeMatrix().transpose()[0][0]);
     primitive_skeleton_controller_data.weights.assign(weights_array->getData(),
                                                       weights_array->getData() + weights_array->getCount());
     primitive_skeleton_controller_data.joint_indices.assign(joint_indices.getData(),
@@ -213,25 +263,10 @@ bool my_collada_writer_t::writeSkinControllerData(const COLLADAFW::SkinControlle
                                                                        joint_per_vertex.getCount());
     primitive_skeleton_controller_data.inverse_bind_matrices.resize(inverse_bind_matrices.getCount());
     for (int i = 0; i < inverse_bind_matrices.getCount(); ++i) {
-        primitive_skeleton_controller_data.inverse_bind_matrices[i] = *(const glm::tmat4x4<double> *) &(inverse_bind_matrices[i].transpose()[0][0]);
+        primitive_skeleton_controller_data.inverse_bind_matrices[i] = glm::transpose(to_mat4(inverse_bind_matrices[i]));
+        LOG_N << "skin controller data inverse bind matrix:";
+        test(inverse_bind_matrices[i]);
     }
-    //LOG_N << skinControllerData->getInverseBindMatrices().getCount();
-    //LOG_N << skinControllerData->getInverseBindMatrices()[0][0][0] << " "
-    //      << skinControllerData->getInverseBindMatrices()[0][0][1] << " "
-    //      << skinControllerData->getInverseBindMatrices()[0][0][2] << " "
-    //      << skinControllerData->getInverseBindMatrices()[0][0][3] << " "
-    //      << skinControllerData->getInverseBindMatrices()[0][1][0] << " "
-    //      << skinControllerData->getInverseBindMatrices()[0][1][1] << " "
-    //      << skinControllerData->getInverseBindMatrices()[0][1][2] << " "
-    //      << skinControllerData->getInverseBindMatrices()[0][1][3] << " "
-    //      << skinControllerData->getInverseBindMatrices()[0][2][0] << " "
-    //      << skinControllerData->getInverseBindMatrices()[0][2][1] << " "
-    //      << skinControllerData->getInverseBindMatrices()[0][2][2] << " "
-    //      << skinControllerData->getInverseBindMatrices()[0][2][3] << " "
-    //      << skinControllerData->getInverseBindMatrices()[0][3][0] << " "
-    //      << skinControllerData->getInverseBindMatrices()[0][3][1] << " "
-    //      << skinControllerData->getInverseBindMatrices()[0][3][2] << " "
-    //      << skinControllerData->getInverseBindMatrices()[0][3][3];
 
     id_skeleton_controller_data_map[skinControllerData->getUniqueId()] = &primitive_skeleton_controller_data;
     return true;
@@ -255,7 +290,6 @@ bool my_collada_writer_t::writeController(const COLLADAFW::Controller *controlle
             joint_ids.assign(skin_controller->getJoints().getData(),
                              skin_controller->getJoints().getData() + skin_controller->getJoints().getCount());
             LOG_N << "\tskin source:" << skin_controller->getSource().toAscii();
-            //instance_map[skin_controller->getUniqueId()] = skin_controller;
             LOG_N << "\tskin controller:" << skin_controller->getUniqueId().toAscii();
             LOG_N << "\tskin controller data:" << skin_controller->getSkinControllerData().toAscii();
             break;

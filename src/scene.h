@@ -48,7 +48,7 @@ public:
     typedef std::shared_ptr<material_t> ptr;
 };
 
-class triangle_group_t {
+class triangles_group_t {
 public:
     //TODO 分开静态mesh物体和动态mesh物体
     material_t::ptr material;
@@ -83,7 +83,7 @@ public:
     GLuint position_buffer_id;
     GLuint normal_buffer_id;
     GLuint uvcoord_buffer_id;
-    std::vector<triangle_group_t> triangles_groups;
+    std::vector<triangles_group_t> triangles_groups;
     std::vector<glm::vec3> positions;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> uvcoords;

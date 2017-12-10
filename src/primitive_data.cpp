@@ -19,7 +19,7 @@ virsual_scene_t::virsual_scene_t() : geometries(), nodes(), controllers(), skele
 
 geometry_t::geometry_t() : mesh() {}
 
-mesh_t::mesh_t() : positions(), normals(), uvcoords(), triangles_list() {}
+mesh_t::mesh_t() : positions(), normals(), uvcoords(), triangles_groups() {}
 
 controller_t::controller_t() : skin_controller() {}
 

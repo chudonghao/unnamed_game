@@ -35,7 +35,7 @@ namespace untitled_game::primitive_data {
         std::vector<glm::vec3> positions;
         std::vector<glm::vec3> normals;
         std::vector<glm::vec2> uvcoords;
-        std::vector<triangles_t> triangles_list;
+        std::vector<triangles_t> triangles_groups;
     };
     class geometry_t{
     public:

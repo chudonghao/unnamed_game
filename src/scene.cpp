@@ -96,20 +96,20 @@ object_t::ptr scene_t::input_object(const primitive_data::node_t &primitive_node
         normals.resize(primitive_positions.size());
         uvcoords.resize(primitive_positions.size());
 
-        for (auto &triangles:primitive_mesh.triangles_list) {
+        for (auto &triangles_group:primitive_mesh.triangles_groups) {
             mesh->triangles_groups.emplace_back();
             vector<unsigned int> elements = vector<unsigned int>();
-            elements.assign(triangles.position_indices.begin(), triangles.position_indices.end());
-            for (int i = 0; i < triangles.position_indices.size(); ++i) {
+            elements.assign(triangles_group.position_indices.begin(), triangles_group.position_indices.end());
+            for (int i = 0; i < triangles_group.position_indices.size(); ++i) {
                 //TODO 修正
-                auto position_index = triangles.position_indices[i];
+                auto position_index = triangles_group.position_indices[i];
                 positions[position_index] = primitive_positions[position_index];
 
-                auto normal_index = triangles.normal_indices[i];
+                auto normal_index = triangles_group.normal_indices[i];
                 normals[position_index] = primitive_normals[normal_index];
 
-                if (i < triangles.uvcoord_indices.size()) {
-                    auto uvcoord_index = triangles.uvcoord_indices[i];
+                if (i < triangles_group.uvcoord_indices.size()) {
+                    auto uvcoord_index = triangles_group.uvcoord_indices[i];
                     uvcoords[position_index] = primitive_uvcoords[uvcoord_index];
                 }
             }
@@ -164,20 +164,20 @@ object_t::ptr scene_t::input_object(const primitive_data::node_t &primitive_node
         normals.resize(primitive_positions.size());
         uvcoords.resize(primitive_positions.size());
 
-        for (auto &triangles:primitive_mesh.triangles_list) {
+        for (auto &triangles_group:primitive_mesh.triangles_groups) {
             mesh->triangles_groups.emplace_back();
             vector<unsigned int> elements = vector<unsigned int>();
-            elements.assign(triangles.position_indices.begin(), triangles.position_indices.end());
-            for (int i = 0; i < triangles.position_indices.size(); ++i) {
+            elements.assign(triangles_group.position_indices.begin(), triangles_group.position_indices.end());
+            for (int i = 0; i < triangles_group.position_indices.size(); ++i) {
                 //TODO 修正
-                auto position_index = triangles.position_indices[i];
+                auto position_index = triangles_group.position_indices[i];
                 positions[position_index] = primitive_positions[position_index];
 
-                auto normal_index = triangles.normal_indices[i];
+                auto normal_index = triangles_group.normal_indices[i];
                 normals[position_index] = primitive_normals[normal_index];
 
-                if (i < triangles.uvcoord_indices.size()) {
-                    auto uvcoord_index = triangles.uvcoord_indices[i];
+                if (i < triangles_group.uvcoord_indices.size()) {
+                    auto uvcoord_index = triangles_group.uvcoord_indices[i];
                     uvcoords[position_index] = primitive_uvcoords[uvcoord_index];
                 }
             }
@@ -222,9 +222,10 @@ object_t::ptr scene_t::input_object(const primitive_data::node_t &primitive_node
         skeleton_modifier->joint_indices = skin_controller.data->joint_indices;
         skeleton_modifier->positions_with_BSM.resize(mesh->positions.size());
         for (int i = 0; i < skeleton_modifier->positions_with_BSM.size(); ++i) {
-            //TODO vec4 -> vec3
             skeleton_modifier->positions_with_BSM[i] =
                     skin_controller.data->bind_shape_matrix * glm::vec4(mesh->positions[i], 1.0f);
+            //skeleton_modifier->positions_with_BSM[i] =
+            //        glm::vec4(mesh->positions[i], 1.0f) * skin_controller.data->bind_shape_matrix;
         }
         for (auto joint:skin_controller.joints) {
             skeleton_modifier->joints.push_back(id_joint_map[reinterpret_cast<size_t>(joint)]);
@@ -316,18 +317,16 @@ static void apply_modifiers(object_t::ptr object, int depth) {
                                     auto joint_count_per_position = skeleton_modifier->joint_count_per_position[i];
                                     for (int j = 0; j < joint_count_per_position; ++j) {
                                         int joint_index = skeleton_modifier->joint_indices[sum1 + j];
-                                        float weight = skeleton_modifier->weights[sum1 + j];
-                                        //TODO 不明白为什么要转置
-                                        glm::vec4 outvj = glm::transpose(skeleton_modifier->joints[joint_index]->world_transformation) *
-                                                          glm::transpose(skeleton_modifier->inverse_bind_matrices[joint_index]) *
-                                                          glm::vec4(skeleton_modifier->positions_with_BSM[i], 1.0f) *
-                                                          weight;
-                                        //glm::vec4 outvj = skeleton_modifier->joints[joint_index]->world_transformation *
-                                        //            skeleton_modifier->inverse_bind_matrices[joint_index] *
-                                        //            glm::vec4(skeleton_modifier->positions_with_BSM[i], 1.0f) *
-                                        //            weight;
+                                        int weight_index = skeleton_modifier->weight_indices[sum1 + j];
+                                        float weight = skeleton_modifier->weights[weight_index];
+                                        //TODO 骨骼动画　到底怎么搞　５５５５
+                                        glm::vec4 outvj =
+                                                glm::vec4(skeleton_modifier->positions_with_BSM[i], 1.0f) *
+                                                //glm::inverse(skeleton_modifier->inverse_bind_matrices[joint_index]) *
+                                                skeleton_modifier->inverse_bind_matrices[joint_index] *
+                                                skeleton_modifier->joints[joint_index]->world_transformation *
+                                                weight;
                                         outv += outvj;
-                                        outv * glm::mat4();
                                     }
                                     mesh->positions[i] = glm::vec3(outv);
                                     sum1 += joint_count_per_position;
@@ -356,14 +355,21 @@ static void apply_modifiers(object_t::ptr object, int depth) {
 }
 
 static void calculate_joints_world_matrix(joint_t::ptr joint, glm::mat4 M, int depth) {
-    if (depth == 1) {
-        //auto mat = glm::mat4(0.4717617, 0.8817261, 1.18468e-7, 0, -0.8817261, 0.4717616, -7.09735e-8, 1, -1.18468e-7,
-        //                     -7.09735e-8, 1, 0, 0, 0, 0, 1);
-        //joint->world_transformation = (mat) * M;
-        joint->world_transformation = joint->transformation * M;
-    } else {
-        joint->world_transformation = joint->transformation * M;
-    }
+    //TODO change joint
+    //if (depth == 1) {
+    //    auto mat = glm::mat4(0.4717617, 0.8817261, 1.18468e-7, 0, -0.8817261, 0.4717616, -7.09735e-8, 1, -1.18468e-7,
+    //                         -7.09735e-8, 1, 0, 0, 0, 0, 1);
+    //    joint->world_transformation = joint->transformation * M;
+    //    //joint->world_transformation = joint->transformation * M;
+    //} else if (depth == 0) {
+    //    auto mat = glm::mat4(1,0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1);
+    //    joint->world_transformation = joint->transformation * M;
+    //}
+    joint->world_transformation = joint->transformation * M;
+    //glm::vec4 tmp = joint->world_transformation * glm::vec4(0.f, 0.f, 0.f, 1.f);
+    //glm::vec3 tmp2 = glm::mat3(joint->world_transformation) * glm::vec3(1.f);
+    //LOG_N << depth << " " << tmp.x << "\t" << tmp.y << "\t" << tmp.z << "\t" << tmp.w;
+    //LOG_N << depth << " " << tmp2.x << "\t" << tmp2.y << "\t" << tmp2.z;
     for (auto &&child_joint:joint->child_joints) {
         calculate_joints_world_matrix(child_joint, joint->world_transformation, depth + 1);
     }
@@ -419,12 +425,11 @@ void scene_t::render() {
         tmp += 0.01f;
     }
     glm::mat4 P = glm::perspective((float) M_PI / 3, 1.f, 0.1f, 100.f);
-    glm::mat4 L = glm::lookAt(glm::vec3(7.f * cos(tmp), 7.f * sin(tmp), 0.f),
-                              glm::vec3(0.f, 0.f, 0.f),
+    glm::mat4 L = glm::lookAt(glm::vec3(0.f, -9.f, 6.f),
+                              glm::vec3(0.f, 0.f, 2.f),
                               glm::vec3(0.f, 0.f, 1.f));
     for (auto &&skeleton :skeletons) {
         for (auto &&joint:skeleton->joints) {
-            //calculate_joints_world_matrix(joint, glm::mat4(1.f));
             calculate_joints_world_matrix(joint, skeleton->transformation, 0);
         }
     }
