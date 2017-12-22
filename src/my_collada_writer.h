@@ -9,6 +9,7 @@
 #include <boost/any.hpp>
 #include <COLLADAFW.h>
 #include "primitive_data.h"
+#include "context.h"
 
 namespace untitled_game {
     class my_collada_writer_t : public COLLADAFW::IWriter {
@@ -21,9 +22,11 @@ namespace untitled_game {
         std::map<COLLADAFW::UniqueId, boost::any> id;
         std::map<primitive_data::controller_t*,std::vector<COLLADAFW::UniqueId>> controller_joint_ids_map;
         primitive_data::virsual_scene_t &primitive_visual_scene;
+        untitled_game::context_t::shared_ptr context;
         // public function declarations
     public:
-        explicit my_collada_writer_t(primitive_data::virsual_scene_t &primitive_visual_scene);
+        explicit my_collada_writer_t(primitive_data::virsual_scene_t &primitive_visual_scene,
+                                     untitled_game::context_t::shared_ptr context);
 
         ~my_collada_writer_t() override = default;
 

@@ -1,7 +1,6 @@
 //
 // Created by chudonghao on 17-11-28.
 //
-#include "config.h"
 #include <QtGui/QOpenGLContext>
 #include <COLLADAFW.h>
 #include <COLLADASaxFWLLoader.h>
@@ -9,21 +8,17 @@
 #include <QtGui/QOpenGLFunctions_3_0>
 #include <glm/gtx/transform.hpp>
 #include "gl_widget.h"
-#include "log.h"
-#include "primitive_data.h"
 #include "my_collada_writer.h"
-#include "scene.h"
 
 using namespace boost;
 using namespace std;
 namespace untitled_game {
-    static scene_t scene;
-
     gl_widget_t::gl_widget_t(QWidget *parent) : QOpenGLWidget(parent) {
         QSurfaceFormat format;
         format.setDepthBufferSize(24);
         format.setProfile(QSurfaceFormat::CoreProfile);
         setFormat(format);
+        context = context_t::shared_ptr(new context_t());
     }
 
     void gl_widget_t::initializeGL() {
@@ -33,7 +28,7 @@ namespace untitled_game {
             filesystem::load_string_file(dae_file_path, dae_string);
             COLLADASaxFWL::Loader loader(nullptr);
             primitive_data::virsual_scene_t virsual_scene;
-            my_collada_writer_t writer(virsual_scene);
+            my_collada_writer_t writer(virsual_scene, context);
             COLLADAFW::Root root(&loader, &writer);
             root.loadDocument(dae_file_path.string());
             scene.input_scene(virsual_scene);

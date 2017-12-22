@@ -113,7 +113,8 @@ void my_collada_writer_t::process_node(primitive_data::node_t &primitive_node, C
             LOG_N << sb.str() << "instance controller:"
                   << node->getInstanceControllers()[0]->getInstanciatedObjectId().toAscii();
             for (int i = 0; i < node->getInstanceControllers().getCount(); ++i) {
-                primitive_node.controller_instances.push_back(id_controller_map[node->getInstanceControllers()[0]->getInstanciatedObjectId()]);
+                primitive_node.controller_instances.push_back(
+                        id_controller_map[node->getInstanceControllers()[0]->getInstanciatedObjectId()]);
             }
         }
         if (!node->getInstanceLights().empty()) {
@@ -152,6 +153,58 @@ bool my_collada_writer_t::writeLibraryNodes(const COLLADAFW::LibraryNodes *libra
 }
 
 bool my_collada_writer_t::writeGeometry(const COLLADAFW::Geometry *geometry) {
+    switch (geometry->getType()) {
+        case COLLADAFW::Geometry::GEO_TYPE_MESH: {
+            auto ge = const_cast<COLLADAFW::Geometry *>(geometry);
+            auto primitive_mesh = static_cast<COLLADAFW::Mesh *>(ge);
+            auto position_values = primitive_mesh->getPositions().getFloatValues();
+            auto normal_values = primitive_mesh->getNormals().getFloatValues();
+            auto uvcoord_values = primitive_mesh->getUVCoords().getFloatValues();
+
+            auto mesh = std::make_shared<mesh_t>();
+            context->data->meshs[primitive_mesh->getOriginalId()] = mesh;
+            mesh->positions.resize(position_values->getCount());
+            mesh->normals.resize(position_values->getCount());
+
+            if (uvcoord_values)
+                mesh->uvcoords.resize(position_values->getCount());
+
+            for (int i = 0; i < primitive_mesh->getMeshPrimitives().getCount(); ++i) {
+                mesh->triangles_groups.emplace_back();
+                auto &triangles = mesh->triangles_groups.back();
+                auto &position_indices = primitive_mesh->getMeshPrimitives()[i]->getPositionIndices();
+                auto &normal_indices = primitive_mesh->getMeshPrimitives()[i]->getNormalIndices();
+                //TODO 多个uvcoord indices array
+                unsigned int *uvcoord_indices;
+                if (!primitive_mesh->getMeshPrimitives()[i]->getUVCoordIndicesArray().empty()) {
+                    uvcoord_indices = primitive_mesh->getMeshPrimitives()[i]->getUVCoordIndicesArray()[0]->getIndices().getData();
+                }
+                triangles.elements.assign(position_indices.getData(),
+                                          position_indices.getData() + position_indices.getCount());
+                for (int j = 0; j < triangles.elements.size(); ++j) {
+                    //TODO 修正
+                    auto position_index = position_indices[j];
+                    mesh->positions[position_index] = *(glm::vec3 *) (&position_values[position_index * 3/*3 float*/]);
+
+                    auto normal_index = normal_indices[j];
+                    mesh->normals[position_index] = *(glm::vec3 *) (&normal_values[normal_index * 3/*3 float*/]);
+
+                    if (uvcoord_values && !uvcoord_values->empty()) {
+                        auto uvcoord_index = uvcoord_indices[j];
+                        mesh->uvcoords[position_index] = *(glm::vec2 *) (&uvcoord_values[uvcoord_index * 2/*2 float*/]);
+                    }
+                }
+            }
+            break;
+        }
+        case COLLADAFW::Geometry::GEO_TYPE_SPLINE:
+            break;
+        case COLLADAFW::Geometry::GEO_TYPE_CONVEX_MESH:
+            break;
+        case COLLADAFW::Geometry::GEO_TYPE_UNKNOWN:
+            break;
+    }
+
     primitive_visual_scene.geometries.emplace_back();
     auto &primitive_geometry = primitive_visual_scene.geometries.back();
     LOG_N << "geometry:" << geometry->getName() << " " << geometry->getUniqueId().toAscii();
@@ -279,7 +332,6 @@ bool my_collada_writer_t::writeController(const COLLADAFW::Controller *controlle
     switch (controller->getControllerType()) {
         case COLLADAFW::Controller::CONTROLLER_TYPE_SKIN: {
             auto skin_controller = static_cast<const COLLADAFW::SkinController *>(controller);
-
             primitive_visual_scene.controllers.emplace_back();
             auto &primitive_controller = primitive_visual_scene.controllers.back();
             primitive_controller.skin_controller.skin = id_geometry_map[skin_controller->getSource()];
@@ -312,6 +364,7 @@ bool my_collada_writer_t::writeKinematicsScene(const COLLADAFW::KinematicsScene 
     return true;
 }
 
-my_collada_writer_t::my_collada_writer_t(primitive_data::virsual_scene_t &primitive_visual_scene)
-        : IWriter(), primitive_visual_scene(primitive_visual_scene) {}
+my_collada_writer_t::my_collada_writer_t(primitive_data::virsual_scene_t &primitive_visual_scene,
+                                         context_t::shared_ptr context)
+        : IWriter(), primitive_visual_scene(primitive_visual_scene), context(context) {}
 }

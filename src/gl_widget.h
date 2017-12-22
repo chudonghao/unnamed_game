@@ -10,6 +10,8 @@
 #include <QtWidgets/QOpenGLWidget>
 #include <QtGui/QOpenGLFunctions>
 #include "render.h"
+#include "scene.h"
+#include "context.h"
 
 namespace untitled_game {
     class gl_widget_t : public QOpenGLWidget{
@@ -26,6 +28,8 @@ namespace untitled_game {
 
     private:
         QOpenGLShaderProgram *opengl_shader_program;
+        untitled_game::scene_t scene;
+        untitled_game::context_t::shared_ptr context;
         int attr_pos;
         int attr_col;
         int uniform_matrix;

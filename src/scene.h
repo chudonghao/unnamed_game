@@ -11,21 +11,59 @@
 #include <glm/vec3.hpp>
 #include <QtGui/QOpenGLContext>
 #include "primitive_data.h"
+#include "log.h"
 
 namespace untitled_game {
+
+class node_t {
+
+};
+
+class node_factory_t {
+public:
+    template<typename T, typename ... ARG_T>
+    static std::shared_ptr<T> create(const std::string &uri, ARG_T &&... arg);
+
+    template<typename T>
+    static std::shared_ptr<T> locate(const std::string &uri);
+
+    static std::map<std::string, std::shared_ptr<node_t>> uri_node_map;
+};
+
+template<typename T, typename... ARG_T>
+std::shared_ptr<T> node_factory_t::create(const std::string &uri, ARG_T &&... arg) {
+    if (uri_node_map.find(uri) != uri_node_map.end()) {
+        LOG_W << "uri_node_map already has node(uri=" << uri << ").";
+        return nullptr;
+    } else {
+        auto node = std::shared_ptr<T>(new T(arg ...));
+        uri_node_map[uri] = node;
+        return node;
+    }
+}
+
+template<typename T>
+std::shared_ptr<T> node_factory_t::locate(const std::string &uri) {
+    auto iter = uri_node_map.find(uri);
+    if (iter != uri_node_map.end()) {
+        return std::static_pointer_cast<T>(*iter);
+    }
+    return nullptr;
+}
+
 class world_t {
 public:
-    typedef std::shared_ptr<world_t> ptr;
+    typedef std::shared_ptr<world_t> shared_ptr;
 };
 
 class render_layer_t {
 public:
-    typedef std::shared_ptr<render_layer_t> ptr;
+    typedef std::shared_ptr<render_layer_t> shared_ptr;
 };
 
 class object_t {
 public:
-    typedef std::shared_ptr<object_t> ptr;
+    typedef std::shared_ptr<object_t> shared_ptr;
     enum class type_e {
         undefined,
         mesh,
@@ -40,18 +78,18 @@ public:
 
     type_e type;
     glm::mat4 transformation;
-    std::list<object_t::ptr> child_objects;
+    std::list<object_t::shared_ptr> child_objects;
 };
 
 class material_t {
 public:
-    typedef std::shared_ptr<material_t> ptr;
+    typedef std::shared_ptr<material_t> shared_ptr;
 };
 
 class triangles_group_t {
 public:
     //TODO 分开静态mesh物体和动态mesh物体
-    material_t::ptr material;
+    material_t::shared_ptr material;
     GLuint vao_id;
     GLuint element_buffer_id;
     GLuint element_count;
@@ -64,7 +102,7 @@ public:
     enum class type_e {
         skeleton_modifier
     };
-    typedef std::shared_ptr<modifier_t> ptr;
+    typedef std::shared_ptr<modifier_t> shared_ptr;
 
     modifier_t(type_e type) : type(type) {}
 
@@ -73,61 +111,44 @@ public:
     type_e type;
 };
 
-class mesh_t : public object_t {
-public:
-    typedef std::shared_ptr<mesh_t> ptr;
-
-    mesh_t();
-
-    //TODO 分开静态mesh物体和动态mesh物体
-    GLuint position_buffer_id;
-    GLuint normal_buffer_id;
-    GLuint uvcoord_buffer_id;
-    std::vector<triangles_group_t> triangles_groups;
-    std::vector<glm::vec3> positions;
-    std::vector<glm::vec3> normals;
-    std::vector<glm::vec2> uvcoords;
-    std::list<modifier_t::ptr> modifiers;
-};
-
 class light_t : public object_t {
 public:
     light_t();
 
-    typedef std::shared_ptr<light_t> ptr;
+    typedef std::shared_ptr<light_t> shared_ptr;
 };
 
 class joint_t : public object_t {
 public:
-    typedef std::shared_ptr<joint_t> ptr;
+    typedef std::shared_ptr<joint_t> shared_ptr;
 
     joint_t();
 
-    std::list<joint_t::ptr> child_joints;
+    std::list<joint_t::shared_ptr> child_joints;
 public:
     glm::mat4 world_transformation;
 };
 
 class skeleton_t : public object_t {
 public:
-    typedef std::shared_ptr<skeleton_t> ptr;
+    typedef std::shared_ptr<skeleton_t> shared_ptr;
 
     skeleton_t();
 
-    std::list<joint_t::ptr> joints;
+    std::list<joint_t::shared_ptr> joints;
 };
 
 
 class skeleton_modifier_t : public modifier_t {
 public:
-    typedef std::shared_ptr<skeleton_modifier_t> ptr;
+    typedef std::shared_ptr<skeleton_modifier_t> shared_ptr;
 
     skeleton_modifier_t();
 
     ~skeleton_modifier_t() override = default;
 
     //TODO use vertices group
-    std::vector<joint_t::ptr> joints;
+    std::vector<joint_t::shared_ptr> joints;
     std::vector<float> weights;
     std::vector<unsigned int> joint_indices;
     std::vector<unsigned int> weight_indices;
@@ -138,26 +159,26 @@ public:
 
 class scene_t {
 public:
-    typedef std::shared_ptr<scene_t> ptr;
+    typedef std::shared_ptr<scene_t> shared_ptr;
 
     void render();
 
     void input_scene(const primitive_data::virsual_scene_t &primitive_virsual_scene);
 
 private:
-    object_t::ptr input_object(const primitive_data::node_t &primitive_node, int depth);
+    object_t::shared_ptr input_object(const primitive_data::node_t &primitive_node, int depth);
 
-    skeleton_t::ptr input_skeleton(const primitive_data::node_t &primitive_node);
+    skeleton_t::shared_ptr input_skeleton(const primitive_data::node_t &primitive_node);
 
-    joint_t::ptr input_joint(const primitive_data::node_t &primitive_node, int depth);
+    joint_t::shared_ptr input_joint(const primitive_data::node_t &primitive_node, int depth);
 
 public:
-    //world_t::ptr world;
-    //std::list<render_layer_t::ptr> render_layers;
-    std::list<object_t::ptr> objects;
-    std::list<skeleton_t::ptr> skeletons;
+    //world_t::shared_ptr world;
+    //std::list<render_layer_t::shared_ptr> render_layers;
+    std::list<object_t::shared_ptr> objects;
+    std::list<skeleton_t::shared_ptr> skeletons;
 private:
-    std::map<size_t, joint_t::ptr> id_joint_map;
+    std::map<size_t, joint_t::shared_ptr> id_joint_map;
 };
 }
 

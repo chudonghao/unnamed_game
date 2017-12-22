@@ -28,7 +28,21 @@ set(SOURCE_FILES
         src/render.h
         src/log.cpp
         src/log.h
-        src/config.h.in src/visual_scenes.cpp src/visual_scenes.h src/primitive_data.cpp src/primitive_data.h src/my_collada_writer.cpp src/my_collada_writer.h src/scene.cpp src/scene.h)
+        src/config.h.in
+        src/visual_scenes.cpp
+        src/visual_scenes.h
+        src/primitive_data.cpp
+        src/primitive_data.h
+        src/my_collada_writer.cpp
+        src/my_collada_writer.h
+        src/scene.cpp
+        src/scene.h
+        src/context.cpp
+        src/context.h
+        src/data.cpp
+        src/data.h
+        src/mesh.cpp
+        src/mesh.h)
 
 include_directories(
         ${CMAKE_SOURCE_DIR}/src

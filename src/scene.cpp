@@ -9,12 +9,13 @@
 #include <glm/gtx/transform.hpp>
 #include "scene.h"
 #include "log.h"
+#include "mesh.h"
 
 namespace untitled_game {
 
 using namespace std;
 
-joint_t::ptr scene_t::input_joint(const primitive_data::node_t &primitive_node, int depth) {
+joint_t::shared_ptr scene_t::input_joint(const primitive_data::node_t &primitive_node, int depth) {
     BOOST_ASSERT_MSG(primitive_node.type == primitive_data::node_t::type_e::joint, "not correct joint type");
     auto joint = make_shared<joint_t>();
     joint->transformation = primitive_node.transformation_matrix;
@@ -25,7 +26,7 @@ joint_t::ptr scene_t::input_joint(const primitive_data::node_t &primitive_node, 
     return joint;
 }
 
-skeleton_t::ptr scene_t::input_skeleton(const primitive_data::node_t &primitive_node) {
+skeleton_t::shared_ptr scene_t::input_skeleton(const primitive_data::node_t &primitive_node) {
     if (!primitive_node.child_nodes.empty()) {
         if (primitive_node.child_nodes.begin()->type == primitive_data::node_t::type_e::joint) {
             auto skeleton = make_shared<skeleton_t>();
@@ -44,9 +45,9 @@ skeleton_t::ptr scene_t::input_skeleton(const primitive_data::node_t &primitive_
     }
 }
 
-object_t::ptr scene_t::input_object(const primitive_data::node_t &primitive_node, int depth) {
+object_t::shared_ptr scene_t::input_object(const primitive_data::node_t &primitive_node, int depth) {
     auto f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_0>();
-    object_t::ptr result = nullptr;
+    object_t::shared_ptr result = nullptr;
     if (primitive_node.geometry_instance) {
         auto mesh = make_shared<mesh_t>();
         result = mesh;
@@ -259,7 +260,7 @@ static int attr_pos;
 static int attr_col;
 static int uniform_matrix;
 
-static void render_object(object_t::ptr object, glm::mat4 PLM, int depth) {
+static void render_object(object_t::shared_ptr object, glm::mat4 PLM, int depth) {
     auto f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_0>();
     if (object) {
         PLM = PLM * object->transformation;
@@ -292,7 +293,7 @@ static void render_object(object_t::ptr object, glm::mat4 PLM, int depth) {
     } else {}
 }
 
-static void apply_modifiers(object_t::ptr object, int depth) {
+static void apply_modifiers(object_t::shared_ptr object, int depth) {
     auto f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_0>();
     if (object) {
         switch (object->type) {
@@ -354,7 +355,7 @@ static void apply_modifiers(object_t::ptr object, int depth) {
     } else {}
 }
 
-static void calculate_joints_world_matrix(joint_t::ptr joint, glm::mat4 M, int depth) {
+static void calculate_joints_world_matrix(joint_t::shared_ptr joint, glm::mat4 M, int depth) {
     //TODO change joint
     //if (depth == 1) {
     //    auto mat = glm::mat4(0.4717617, 0.8817261, 1.18468e-7, 0, -0.8817261, 0.4717616, -7.09735e-8, 1, -1.18468e-7,
@@ -443,8 +444,6 @@ void scene_t::render() {
 }
 
 object_t::object_t(object_t::type_e type) : type(type) {}
-
-mesh_t::mesh_t() : object_t(type_e::mesh) {}
 
 joint_t::joint_t() : object_t(type_e::joint) {}
 
