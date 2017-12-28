@@ -5,7 +5,6 @@
 #ifndef UNTITLED_GAME_RENDER_H
 #define UNTITLED_GAME_RENDER_H
 
-#include "config.h"
 #include <QtGui/QOpenGLFunctions>
 #include <QtGui/QOpenGLShader>
 #include <glm/glm.hpp>

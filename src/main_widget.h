@@ -5,7 +5,6 @@
 #ifndef UNTITLED_GAME_MAIN_WIDGET_H
 #define UNTITLED_GAME_MAIN_WIDGET_H
 
-#include "config.h"
 #include <QtWidgets/QWidget>
 
 namespace Ui{

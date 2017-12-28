@@ -7,6 +7,8 @@
 
 namespace untitled_game {
 
-data_t::data_t() : meshs(), materials() {}
+data_t::data_t() {
+
+}
 
 }

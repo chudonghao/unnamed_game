@@ -5,19 +5,19 @@
 #ifndef UNTITLED_GAME_LOG_H
 #define UNTITLED_GAME_LOG_H
 
-#include "config.h"
 #include <boost/log/common.hpp>
-namespace untitled_game{
-    enum severity_level
-    {
-        normal,
-        notification,
-        warning,
-        error,
-        critical
-    };
-    extern boost::log::sources::severity_logger< severity_level > severity_logger;
-    void init_logging();
+
+namespace untitled_game {
+enum severity_level {
+    normal,
+    notification,
+    warning,
+    error,
+    critical
+};
+extern boost::log::sources::severity_logger<severity_level> severity_logger;
+
+void init_logging();
 }
 
 //#define LOG_FUNC BOOST_LOG_FUNCTION()

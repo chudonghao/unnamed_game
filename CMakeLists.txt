@@ -42,7 +42,33 @@ set(SOURCE_FILES
         src/data.cpp
         src/data.h
         src/mesh.cpp
-        src/mesh.h)
+        src/mesh.h
+        src/my_collada_writer1.cpp
+        src/my_collada_writer1.h
+        src/node.cpp
+        src/node.h
+        src/data_block.cpp
+        src/data_block.h
+        src/lamp.cpp
+        src/lamp.h
+        src/object.cpp
+        src/object.h
+        src/armature.cpp
+        src/armature.h
+        src/id_shared_ptr_map.cpp
+        src/id_shared_ptr_map.h
+        src/bone.cpp
+        src/bone.h
+        src/joint.cpp
+        src/joint.h
+        src/has_id.cpp
+        src/has_id.h
+        src/name_shared_ptr_map.cpp
+        src/name_shared_ptr_map.h
+        src/material.cpp
+        src/material.h
+        src/camera.cpp
+        src/camera.h src/triangles_group.cpp src/triangles_group.h)
 
 include_directories(
         ${CMAKE_SOURCE_DIR}/src

@@ -5,7 +5,6 @@
 #ifndef UNTITLED_GAME_GL_WIDGET_H
 #define UNTITLED_GAME_GL_WIDGET_H
 
-#include "config.h"
 #include <QtCore/QArgument>
 #include <QtWidgets/QOpenGLWidget>
 #include <QtGui/QOpenGLFunctions>
