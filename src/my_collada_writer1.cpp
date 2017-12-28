@@ -114,7 +114,7 @@ bool my_collada_writer1_t::writeVisualScene(const COLLADAFW::VisualScene *visual
                 if (!item.node->getInstanceGeometries().empty()) {
                     LOG_N << "instance mesh id:"
                           << unique_id_id_map[item.node->getInstanceGeometries()[0]->getInstanciatedObjectId()];
-                    object->data = context->data->meshs[unique_id_id_map[item.node->getInstanceGeometries()[0]->getInstanciatedObjectId()]];
+                    object->data = context->data->meshes[unique_id_id_map[item.node->getInstanceGeometries()[0]->getInstanciatedObjectId()]];
                     object->type = object_t::type_e::mesh;
                 }
                 //TODO 获取??
@@ -197,7 +197,7 @@ bool my_collada_writer1_t::writeGeometry(const COLLADAFW::Geometry *geometry) {
             auto position_values = primitive_mesh->getPositions().getFloatValues();
             auto normal_values = primitive_mesh->getNormals().getFloatValues();
             auto uvcoord_values = primitive_mesh->getUVCoords().getFloatValues();
-            auto &mesh = context->data->meshs.create(primitive_mesh->getOriginalId());
+            auto &mesh = context->data->meshes.create(primitive_mesh->getOriginalId());
             mesh->positions.resize(position_values->getCount());
             mesh->normals.resize(position_values->getCount());
 

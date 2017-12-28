@@ -23,7 +23,7 @@ public:
     data_t();
 
     //TODO 是否考虑用set
-    id_shared_ptr_map_t<untitled_game::mesh_t> meshs;
+    id_shared_ptr_map_t<untitled_game::mesh_t> meshes;
     id_shared_ptr_map_t<untitled_game::material_t> materials;
     id_shared_ptr_map_t<untitled_game::object_t> objects;
     id_shared_ptr_map_t<untitled_game::armature_t> armatures;

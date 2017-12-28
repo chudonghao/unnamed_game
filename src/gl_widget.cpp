@@ -46,7 +46,7 @@ gl_widget_t::gl_widget_t(QWidget *parent) : QOpenGLWidget(parent) {
 }
 
 void gl_widget_t::initializeGL() {
-    filesystem::path dae_file_path = "second.dae";
+    filesystem::path dae_file_path = "first.dae";
     if (filesystem::is_regular_file(dae_file_path)) {
         COLLADASaxFWL::Loader loader(nullptr);
 
@@ -64,7 +64,7 @@ void gl_widget_t::initializeGL() {
         context->active_scene = context->data->scenes.begin()->second;
         context->active_scene->active_camera = context->data->objects["Camera"];
 
-        for (auto &&mesh: context->data->meshs) {
+        for (auto &&mesh: context->data->meshes) {
             LOG_N << mesh.first;
         }
         for (auto &&object: context->data->objects) {
