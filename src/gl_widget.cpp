@@ -16,7 +16,7 @@
 
 using namespace boost;
 using namespace std;
-namespace untitled_game {
+namespace unnamed_game {
 
 static void test(const glm::mat4 &m) {
     LOG_N << m[0][0] << " "
@@ -42,11 +42,11 @@ gl_widget_t::gl_widget_t(QWidget *parent) : QOpenGLWidget(parent) {
     format.setDepthBufferSize(24);
     format.setProfile(QSurfaceFormat::CoreProfile);
     setFormat(format);
-    context = std::make_shared<untitled_game::context_t>();
+    context = std::make_shared<unnamed_game::context_t>();
 }
 
 void gl_widget_t::initializeGL() {
-    filesystem::path dae_file_path = "first.dae";
+    filesystem::path dae_file_path = "second.dae";
     if (filesystem::is_regular_file(dae_file_path)) {
         COLLADASaxFWL::Loader loader(nullptr);
 
@@ -189,9 +189,35 @@ void gl_widget_t::paintGL() {
     f->glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
     f->glBindVertexArray(0);
     opengl_shader_program->release();
-    untitled_game::render(context->active_scene);
-    auto camera = context->data->objects["Camera"];
-    camera->matrix_local = glm::rotate(0.01f, glm::vec3(0.f, 0.f, 1.f)) * camera->matrix_local;
+    unnamed_game::render(context->active_scene);
     update();
 }
+
+void gl_widget_t::keyPressEvent(QKeyEvent *event) {
+    QWidget::keyPressEvent(event);
+    LOG_N << "key press event.";
+    //debug
+    auto camera = context->active_scene->active_camera;
+    switch (event->key()) {
+        case Qt::Key_W:
+            //camera->matrix_local = glm::translate(glm::vec3(1.f, 0.f, 0.f)) * camera->matrix_local;
+            camera->matrix_local = glm::translate(camera->matrix_local, glm::vec3(0.f, 0.f, -1.f));
+            break;
+        case Qt::Key_S:
+            //camera->matrix_local = glm::translate(glm::vec3(-1.f, 0.f, 0.f)) * camera->matrix_local;
+            camera->matrix_local = glm::translate(camera->matrix_local, glm::vec3(0.f, 0.f, 1.f));
+            break;
+        case Qt::Key_A:
+            //camera->matrix_local = glm::translate(glm::vec3(1.f, 0.f, 0.f)) * camera->matrix_local;
+            camera->matrix_local = glm::translate(camera->matrix_local, glm::vec3(-1.f, 0.f, 0.f));
+            break;
+        case Qt::Key_D:
+            //camera->matrix_local = glm::translate(glm::vec3(-1.f, 0.f, 0.f)) * camera->matrix_local;
+            camera->matrix_local = glm::translate(camera->matrix_local, glm::vec3(1.f, 0.f, 0.f));
+            break;
+        default:
+            break;
+    }
+}
+
 }

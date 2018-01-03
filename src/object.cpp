@@ -4,7 +4,7 @@
 
 #include "object.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 object_t::object_t() : type(type_e::undefined) {}
 

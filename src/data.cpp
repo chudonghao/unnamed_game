@@ -5,7 +5,7 @@
 #include "data.h"
 
 
-namespace untitled_game {
+namespace unnamed_game {
 
 data_t::data_t() {
 

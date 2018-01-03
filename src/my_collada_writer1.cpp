@@ -8,13 +8,13 @@
 #include "mesh.h"
 #include "log.h"
 
-using namespace untitled_game;
+using namespace unnamed_game;
 using namespace std;
 
-namespace untitled_game {
+namespace unnamed_game {
 
 //COLLADA存储矩阵的方式是行优先，而gl是列优先
-static glm::mat4 to_mat4(const COLLADABU::Math::Matrix4 &m) {
+static glm::mat4 to_glm_mat4(const COLLADABU::Math::Matrix4 &m) {
     glm::mat4 result;
     result[0][0] = m[0][0];
     result[0][1] = m[0][1];
@@ -36,7 +36,7 @@ static glm::mat4 to_mat4(const COLLADABU::Math::Matrix4 &m) {
     return result;
 }
 
-my_collada_writer1_t::my_collada_writer1_t(untitled_game::context_t::shared_ptr context) : context(context) {
+my_collada_writer1_t::my_collada_writer1_t(unnamed_game::context_t::shared_ptr context) : context(context) {
 
 }
 
@@ -109,7 +109,7 @@ bool my_collada_writer1_t::writeVisualScene(const COLLADAFW::VisualScene *visual
                 //设置父子关系
                 set_parent(object, item.object_parent);
                 //设置坐标变换矩阵
-                object->matrix_local = to_mat4(item.node->getTransformationMatrix());
+                object->matrix_local = to_glm_mat4(item.node->getTransformationMatrix());
                 //获取mesh
                 if (!item.node->getInstanceGeometries().empty()) {
                     LOG_N << "instance mesh id:"
@@ -119,6 +119,8 @@ bool my_collada_writer1_t::writeVisualScene(const COLLADAFW::VisualScene *visual
                 }
                 //TODO 获取??
                 if (!item.node->getInstanceControllers().empty()) {
+                    LOG_N << "instance controller id:"
+                          << item.node->getInstanceControllers()[0]->getInstanciatedObjectId().toAscii();
                 }
                 if (!item.node->getInstanceCameras().empty()) {
                     LOG_N << "instance camera count:" << item.node->getInstanceCameras().getCount();
@@ -166,7 +168,7 @@ bool my_collada_writer1_t::writeVisualScene(const COLLADAFW::VisualScene *visual
                 //bone节点
                 auto bone = armature->bones.create(item.node->getOriginalId());
                 //设置坐标系变换矩阵
-                bone->matrix_local = to_mat4(item.node->getTransformationMatrix());
+                bone->matrix_local = to_glm_mat4(item.node->getTransformationMatrix());
                 //设置父子关系
                 set_parent(bone, item.bone_parent);
                 //使用栈　处理树形数据结构
@@ -294,10 +296,21 @@ bool my_collada_writer1_t::writeAnimationList(const COLLADAFW::AnimationList *an
 }
 
 bool my_collada_writer1_t::writeSkinControllerData(const COLLADAFW::SkinControllerData *skinControllerData) {
+    LOG_N << "skin controller data:" << skinControllerData->getOriginalId() << " "
+          << skinControllerData->getUniqueId().toAscii();
     return true;
 }
 
 bool my_collada_writer1_t::writeController(const COLLADAFW::Controller *controller) {
+    LOG_N << "controller:" << controller->getUniqueId().toAscii();
+    switch (controller->getControllerType()) {
+        case COLLADAFW::Controller::CONTROLLER_TYPE_SKIN: {
+            auto skin_controller = static_cast<const COLLADAFW::SkinController *>(controller);
+            break;
+        }
+        case COLLADAFW::Controller::CONTROLLER_TYPE_MORPH:
+            break;
+    }
     return true;
 }
 

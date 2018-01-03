@@ -4,7 +4,7 @@
 
 #include "bone.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 void set_parent(bone_t::shared_ptr &child, bone_t::shared_ptr &parent) {
     if (child) {

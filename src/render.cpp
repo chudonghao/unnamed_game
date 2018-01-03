@@ -9,7 +9,7 @@
 #include <QtGui/QOpenGLFunctions_4_0_Core>
 #include "render.h"
 
-namespace untitled_game {
+namespace unnamed_game {
     using namespace std;
     void render_t::resize(int w, int h) {
 

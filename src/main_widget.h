@@ -2,8 +2,8 @@
 // Created by chudonghao on 17-11-28.
 //
 
-#ifndef UNTITLED_GAME_MAIN_WIDGET_H
-#define UNTITLED_GAME_MAIN_WIDGET_H
+#ifndef UNNAMED_GAME_MAIN_WIDGET_H
+#define UNNAMED_GAME_MAIN_WIDGET_H
 
 #include <QtWidgets/QWidget>
 
@@ -11,7 +11,7 @@ namespace Ui{
     class main_widget;
 }
 
-namespace untitled_game{
+namespace unnamed_game {
     class main_widget_t : public QWidget {
         Q_OBJECT
     public:
@@ -23,4 +23,4 @@ namespace untitled_game{
 }
 
 
-#endif //UNTITLED_GAME_MAIN_WIDGET_H
+#endif //UNNAMED_GAME_MAIN_WIDGET_H

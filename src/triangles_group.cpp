@@ -5,7 +5,7 @@
 #include <QtGui/QOpenGLFunctions_3_0>
 #include "triangles_group.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 
 triangles_group_hardware_data_t::triangles_group_hardware_data_t() : vao_id(0), element_buffer_id(0),

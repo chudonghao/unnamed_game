@@ -2,14 +2,14 @@
 // Created by chudonghao on 17-11-28.
 //
 
-#ifndef UNTITLED_GAME_RENDER_H
-#define UNTITLED_GAME_RENDER_H
+#ifndef UNNAMED_GAME_RENDER_H
+#define UNNAMED_GAME_RENDER_H
 
 #include <QtGui/QOpenGLFunctions>
 #include <QtGui/QOpenGLShader>
 #include <glm/glm.hpp>
 
-namespace untitled_game {
+namespace unnamed_game {
 
     class render_t {
     public:
@@ -30,4 +30,4 @@ namespace untitled_game {
 }
 
 
-#endif //UNTITLED_GAME_RENDER_H
+#endif //UNNAMED_GAME_RENDER_H

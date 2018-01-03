@@ -2,7 +2,8 @@
 #include <QtWidgets/QApplication>
 #include "main_widget.h"
 #include "log.h"
-using namespace untitled_game;
+
+using namespace unnamed_game;
 
 int main(int argc, char *argv[]) {
     init_logging();

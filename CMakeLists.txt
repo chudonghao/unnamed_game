@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.7)
 
-project(untitled_game)
+project(unnamed_game)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -68,15 +68,22 @@ set(SOURCE_FILES
         src/material.cpp
         src/material.h
         src/camera.cpp
-        src/camera.h src/triangles_group.cpp src/triangles_group.h)
+        src/camera.h
+        src/triangles_group.cpp
+        src/triangles_group.h
+        src/modifier.cpp
+        src/modifier.h
+        src/armature_modifier.cpp
+        src/armature_modifier.h)
 
 include_directories(
         ${CMAKE_SOURCE_DIR}/src
         ${OPENCOLLADA_INCLUDE_DIRS}
+        ${CMAKE_BINARY_DIR}
 )
 
-add_executable(untitled_game ${SOURCE_FILES})
-target_link_libraries(untitled_game
+add_executable(unnamed_game ${SOURCE_FILES})
+target_link_libraries(unnamed_game
         Qt5::Widgets
         boost_system
         boost_thread
@@ -86,4 +93,4 @@ target_link_libraries(untitled_game
         pthread
         OpenCOLLADAFramework_static
         OpenCOLLADASaxFrameworkLoader_static
-)
+        )

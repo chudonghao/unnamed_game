@@ -4,7 +4,7 @@
 
 #include "armature.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 
 }

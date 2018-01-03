@@ -7,7 +7,7 @@
 #include "camera.h"
 #include "log.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 camera_t::~camera_t() {
 

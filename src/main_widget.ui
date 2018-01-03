@@ -11,20 +11,23 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>untitled_game</string>
+      <string>unnamed_game</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="untitled_game::gl_widget_t" name="gl_widget" native="true"/>
+       <widget class="unnamed_game::gl_widget_t" name="gl_widget">
+           <property name="focusPolicy">
+               <enum>Qt::StrongFocus</enum>
+           </property>
+       </widget>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>untitled_game::gl_widget_t</class>
-   <extends>QWidget</extends>
+      <class>unnamed_game::gl_widget_t</class>
+      <extends>QOpenGLWidget</extends>
    <header>gl_widget.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

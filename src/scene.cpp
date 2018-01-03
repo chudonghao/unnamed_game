@@ -13,13 +13,13 @@
 #include "log.h"
 #include "mesh.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 using namespace std;
 
 skeleton_t::skeleton_t() : object_t() { type = type_e::armature; }
 
-skeleton_modifier_t::skeleton_modifier_t() : modifier_t(type_e::skeleton_modifier) {}
+skeleton_modifier_t::skeleton_modifier_t() : modifier_t(type_e::armatrue) {}
 
 
 void render(scene_t::shared_ptr scene) {
@@ -136,4 +136,4 @@ void render(scene_t::shared_ptr scene) {
         }
     }
 }
-}//namespace untitled_game
+}//namespace unnamed_game

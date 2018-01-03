@@ -2,8 +2,8 @@
 // Created by chudonghao on 17-12-4.
 //
 
-#ifndef UNTITLED_GAME_PRIMITIVE_DATA_H
-#define UNTITLED_GAME_PRIMITIVE_DATA_H
+#ifndef UNNAMED_GAME_PRIMITIVE_DATA_H
+#define UNNAMED_GAME_PRIMITIVE_DATA_H
 
 
 #include <cstddef>
@@ -11,7 +11,7 @@
 #include <list>
 #include <glm/glm.hpp>
 
-namespace untitled_game {
+namespace unnamed_game {
 namespace primitive_data {
 class camera_t {
     float xfov;
@@ -130,4 +130,4 @@ public:
 }
 }
 
-#endif //UNTITLED_GAME_PRIMITIVE_DATA_H
+#endif //UNNAMED_GAME_PRIMITIVE_DATA_H

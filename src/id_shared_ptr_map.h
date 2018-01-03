@@ -2,15 +2,15 @@
 // Created by chudonghao on 17-12-23.
 //
 
-#ifndef UNTITLED_GAME_ID_SHARED_PTR_MAP_H
-#define UNTITLED_GAME_ID_SHARED_PTR_MAP_H
+#ifndef UNNAMED_GAME_ID_SHARED_PTR_MAP_H
+#define UNNAMED_GAME_ID_SHARED_PTR_MAP_H
 
 #include <memory>
 #include <map>
 #include "log.h"
 #include "has_id.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 //template<typename T, typename enable_t = void>
 //class id_shared_ptr_map1_t {};
@@ -94,4 +94,4 @@ void id_shared_ptr_map_t<T>::remove(const std::string &id) {
 
 }
 
-#endif //UNTITLED_GAME_ID_SHARED_PTR_MAP_H
+#endif //UNNAMED_GAME_ID_SHARED_PTR_MAP_H

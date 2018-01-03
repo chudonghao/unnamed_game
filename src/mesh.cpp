@@ -5,7 +5,7 @@
 #include <QtGui/QOpenGLFunctions_3_0>
 #include "mesh.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 mesh_t::mesh_t() {}
 

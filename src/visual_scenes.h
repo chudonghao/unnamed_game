@@ -2,13 +2,14 @@
 // Created by chudonghao on 17-12-2.
 //
 
-#ifndef UNTITLED_GAME_VISUAL_SCENES_H
-#define UNTITLED_GAME_VISUAL_SCENES_H
+#ifndef UNNAMED_GAME_VISUAL_SCENES_H
+#define UNNAMED_GAME_VISUAL_SCENES_H
 
 #include <list>
 #include <glm/glm.hpp>
-namespace untitled_game::a {
+
+namespace unnamed_game::a {
 }
 
 
-#endif //UNTITLED_GAME_VISUAL_SCENES_H
+#endif //UNNAMED_GAME_VISUAL_SCENES_H

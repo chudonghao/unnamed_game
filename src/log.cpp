@@ -15,10 +15,10 @@
 #include "log.h"
 
 using namespace std;
-using namespace untitled_game;
+using namespace unnamed_game;
 namespace logging = boost::log;
 
-namespace untitled_game {
+namespace unnamed_game {
     logging::sources::severity_logger <severity_level> severity_logger;
     // The formatting logic for the severity level
     template<typename CharT, typename TraitsT>

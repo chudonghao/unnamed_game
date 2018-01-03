@@ -2,8 +2,8 @@
 // Created by chudonghao on 17-12-4.
 //
 
-#ifndef UNTITLED_GAME_MY_COLLADA_WRITER_H
-#define UNTITLED_GAME_MY_COLLADA_WRITER_H
+#ifndef UNNAMED_GAME_MY_COLLADA_WRITER_H
+#define UNNAMED_GAME_MY_COLLADA_WRITER_H
 
 #include <map>
 #include <boost/any.hpp>
@@ -11,7 +11,7 @@
 #include "primitive_data.h"
 #include "context.h"
 
-namespace untitled_game {
+namespace unnamed_game {
     class my_collada_writer_t : public COLLADAFW::IWriter {
         // member declarations
     private:
@@ -119,4 +119,4 @@ namespace untitled_game {
 }
 
 
-#endif //UNTITLED_GAME_MY_COLLADA_WRITER_H
+#endif //UNNAMED_GAME_MY_COLLADA_WRITER_H

@@ -2,8 +2,8 @@
 // Created by chudonghao on 17-12-22.
 //
 
-#ifndef UNTITLED_GAME_MESH_H
-#define UNTITLED_GAME_MESH_H
+#ifndef UNNAMED_GAME_MESH_H
+#define UNNAMED_GAME_MESH_H
 
 #include <vector>
 #include <glm/glm.hpp>
@@ -11,7 +11,7 @@
 #include "triangles_group.h"
 #include "scene.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 class mesh_hardware_data_t {
 public:
@@ -45,4 +45,4 @@ public:
 void transfer_data_to_hardware(mesh_t::shared_ptr mesh);
 
 }
-#endif //UNTITLED_GAME_MESH_H
+#endif //UNNAMED_GAME_MESH_H

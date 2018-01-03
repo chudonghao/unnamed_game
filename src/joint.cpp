@@ -4,7 +4,7 @@
 
 #include "joint.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 joint_t::joint_t() {
 

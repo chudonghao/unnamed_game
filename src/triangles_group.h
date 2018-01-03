@@ -2,13 +2,13 @@
 // Created by chudonghao on 17-12-28.
 //
 
-#ifndef UNTITLED_GAME_TRIANGLES_GROUP_H
-#define UNTITLED_GAME_TRIANGLES_GROUP_H
+#ifndef UNNAMED_GAME_TRIANGLES_GROUP_H
+#define UNNAMED_GAME_TRIANGLES_GROUP_H
 
 #include <QtGui>
 #include "material.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 class triangles_group_hardware_data_t {
 public:
@@ -33,4 +33,4 @@ public:
 
 }
 
-#endif //UNTITLED_GAME_TRIANGLES_GROUP_H
+#endif //UNNAMED_GAME_TRIANGLES_GROUP_H

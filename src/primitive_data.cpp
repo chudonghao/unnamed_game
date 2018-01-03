@@ -5,7 +5,7 @@
 #include "primitive_data.h"
 
 
-namespace untitled_game::primitive_data {
+namespace unnamed_game::primitive_data {
 
 node_t::node_t(type_e type) : type(type),/* location(), rotation_z(), rotation_y(), rotation_x(), scale(),*/
                               transformation_matrix(), child_nodes(), camera_instance(), geometry_instance(),

@@ -2,22 +2,22 @@
 // Created by chudonghao on 17-12-23.
 //
 
-#ifndef UNTITLED_GAME_MY_COLLADA_WRITER1_H
-#define UNTITLED_GAME_MY_COLLADA_WRITER1_H
+#ifndef UNNAMED_GAME_MY_COLLADA_WRITER1_H
+#define UNNAMED_GAME_MY_COLLADA_WRITER1_H
 
 #include <COLLADAFW.h>
 #include "context.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 class my_collada_writer1_t : public COLLADAFW::IWriter {
 // member declarations
 private:
-    untitled_game::context_t::shared_ptr context;
+    unnamed_game::context_t::shared_ptr context;
     std::map<COLLADAFW::UniqueId/*id*/, std::string/*uri*/> unique_id_id_map;
     // public function declarations
 public:
-    explicit my_collada_writer1_t(untitled_game::context_t::shared_ptr context);
+    explicit my_collada_writer1_t(unnamed_game::context_t::shared_ptr context);
 
     ~my_collada_writer1_t() override = default;
 
@@ -107,4 +107,4 @@ public:
 
 }
 
-#endif //UNTITLED_GAME_MY_COLLADA_WRITER1_H
+#endif //UNNAMED_GAME_MY_COLLADA_WRITER1_H

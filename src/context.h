@@ -2,12 +2,12 @@
 // Created by chudonghao on 17-12-22.
 //
 
-#ifndef UNTITLED_GAME_CONTEXT_H
-#define UNTITLED_GAME_CONTEXT_H
+#ifndef UNNAMED_GAME_CONTEXT_H
+#define UNNAMED_GAME_CONTEXT_H
 
 #include "data.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 class context_t : public data_block_t {
 public:
@@ -20,4 +20,4 @@ public:
 
 }
 
-#endif //UNTITLED_GAME_CONTEXT_H
+#endif //UNNAMED_GAME_CONTEXT_H

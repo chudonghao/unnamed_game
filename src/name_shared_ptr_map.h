@@ -2,14 +2,14 @@
 // Created by chudonghao on 17-12-26.
 //
 
-#ifndef UNTITLED_GAME_NAME_SHARED_PTR_MAP_H
-#define UNTITLED_GAME_NAME_SHARED_PTR_MAP_H
+#ifndef UNNAMED_GAME_NAME_SHARED_PTR_MAP_H
+#define UNNAMED_GAME_NAME_SHARED_PTR_MAP_H
 
 #include <map>
 #include <memory>
 #include "log.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 template<typename T>
 class name_shared_ptr_map_t : public std::map<std::string/*name*/, std::shared_ptr<T>> {
@@ -65,4 +65,4 @@ void name_shared_ptr_map_t<T>::remove(const std::string &name) {
 
 }
 
-#endif //UNTITLED_GAME_NAME_SHARED_PTR_MAP_H
+#endif //UNNAMED_GAME_NAME_SHARED_PTR_MAP_H

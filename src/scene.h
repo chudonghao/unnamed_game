@@ -2,8 +2,8 @@
 // Created by chudonghao on 17-12-4.
 //
 
-#ifndef UNTITLED_GAME_SCENE_H
-#define UNTITLED_GAME_SCENE_H
+#ifndef UNNAMED_GAME_SCENE_H
+#define UNNAMED_GAME_SCENE_H
 
 #include <set>
 #include <list>
@@ -17,8 +17,9 @@
 #include "joint.h"
 #include "material.h"
 #include "camera.h"
+#include "modifier.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 class world_t {
 public:
@@ -28,20 +29,6 @@ public:
 class render_layer_t {
 public:
     typedef std::shared_ptr<render_layer_t> shared_ptr;
-};
-
-class modifier_t {
-public:
-    enum class type_e {
-        skeleton_modifier
-    };
-    typedef std::shared_ptr<modifier_t> shared_ptr;
-
-    modifier_t(type_e type) : type(type) {}
-
-    virtual ~modifier_t() = default;
-
-    type_e type;
 };
 
 class skeleton_t : public object_t {
@@ -86,4 +73,4 @@ void render(scene_t::shared_ptr scene);
 
 }
 
-#endif //UNTITLED_GAME_SCENE_H
+#endif //UNNAMED_GAME_SCENE_H

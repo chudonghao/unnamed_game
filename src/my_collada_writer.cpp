@@ -7,7 +7,7 @@
 #include "my_collada_writer.h"
 #include "log.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 static void test(const COLLADABU::Math::Matrix4 &m) {
     LOG_N << m[0][0] << " "
@@ -33,7 +33,7 @@ static void test(const COLLADABU::Math::Matrix4 &m) {
  * @param m
  * @return
  */
-static glm::mat4 to_mat4(const COLLADABU::Math::Matrix4 &m) {
+static glm::mat4 to_glm_mat4(const COLLADABU::Math::Matrix4 &m) {
     glm::mat4 result;
     result[0][0] = m[0][0];
     result[0][1] = m[0][1];
@@ -81,7 +81,7 @@ void my_collada_writer_t::process_node(primitive_data::node_t &primitive_node, C
     for (int j = 0; j < deepth; ++j) {
         sb << "\t";
     }
-    primitive_node.transformation_matrix = glm::transpose(to_mat4(node->getTransformationMatrix()));
+    primitive_node.transformation_matrix = glm::transpose(to_glm_mat4(node->getTransformationMatrix()));
     if (node->getType() == COLLADAFW::Node::NodeType::JOINT) {
         primitive_node.type = primitive_data::node_t::type_e::joint;
         LOG_N << "joint transform matrix:";
@@ -252,7 +252,7 @@ bool my_collada_writer_t::writeSkinControllerData(const COLLADAFW::SkinControlle
     auto &joint_per_vertex = skinControllerData->getJointsPerVertex();
     auto &inverse_bind_matrices = skinControllerData->getInverseBindMatrices();
     primitive_skeleton_controller_data.bind_shape_matrix = glm::transpose(
-            to_mat4(skinControllerData->getBindShapeMatrix()));
+            to_glm_mat4(skinControllerData->getBindShapeMatrix()));
     LOG_N << "skin controller data bind shape matrix:";
     test(skinControllerData->getBindShapeMatrix());
 
@@ -267,7 +267,8 @@ bool my_collada_writer_t::writeSkinControllerData(const COLLADAFW::SkinControlle
                                                                        joint_per_vertex.getCount());
     primitive_skeleton_controller_data.inverse_bind_matrices.resize(inverse_bind_matrices.getCount());
     for (int i = 0; i < inverse_bind_matrices.getCount(); ++i) {
-        primitive_skeleton_controller_data.inverse_bind_matrices[i] = glm::transpose(to_mat4(inverse_bind_matrices[i]));
+        primitive_skeleton_controller_data.inverse_bind_matrices[i] = glm::transpose(
+                to_glm_mat4(inverse_bind_matrices[i]));
         LOG_N << "skin controller data inverse bind matrix:";
         test(inverse_bind_matrices[i]);
     }

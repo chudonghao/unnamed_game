@@ -2,13 +2,13 @@
 // Created by chudonghao on 17-12-23.
 //
 
-#ifndef UNTITLED_GAME_LAMP_H
-#define UNTITLED_GAME_LAMP_H
+#ifndef UNNAMED_GAME_LAMP_H
+#define UNNAMED_GAME_LAMP_H
 
 #include <memory>
 #include "has_id.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 class lamp_t : public has_id_t {
 public:
@@ -18,4 +18,4 @@ public:
 };
 
 }
-#endif //UNTITLED_GAME_LAMP_H
+#endif //UNNAMED_GAME_LAMP_H

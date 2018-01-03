@@ -4,6 +4,6 @@
 
 #include "has_id.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 }

@@ -4,7 +4,7 @@
 
 #include "lamp.h"
 
-namespace untitled_game {
+namespace unnamed_game {
 
 lamp_t::lamp_t() {}
 
