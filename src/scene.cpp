@@ -22,7 +22,7 @@ skeleton_t::skeleton_t() : object_t() { type = type_e::armature; }
 skeleton_modifier_t::skeleton_modifier_t() : modifier_t(type_e::armatrue) {}
 
 
-void render(scene_t::shared_ptr scene) {
+void render(std::shared_ptr<scene_t> scene) {
     auto f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_0>();
     //TODO shader
     static QOpenGLShaderProgram *opengl_shader_program;
@@ -79,7 +79,7 @@ void render(scene_t::shared_ptr scene) {
     //glm::lookAt(glm::vec3(0.f, -1.f, 1.f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 0.f, 1.f));
 
     struct stack_item_t {
-        object_t::shared_ptr object;
+        std::shared_ptr<object_t> object;
     };
     std::stack<stack_item_t> stack;
     for (auto &&object:scene->root_objects) {

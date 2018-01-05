@@ -13,7 +13,7 @@ mesh_t::~mesh_t() {
 
 }
 
-void transfer_data_to_hardware(mesh_t::shared_ptr mesh) {
+void transfer_data_to_hardware(std::shared_ptr<mesh_t> mesh) {
     auto f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_0>();
     auto &position_buffer_id = mesh->hardware_data.position_buffer_id;
     auto &normal_buffer_id = mesh->hardware_data.normal_buffer_id;

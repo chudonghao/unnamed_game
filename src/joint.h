@@ -13,11 +13,10 @@ namespace unnamed_game {
 
 class joint_t {
 public:
-    typedef std::shared_ptr<joint_t> shared_ptr;
 
     joint_t();
 
-    std::list<joint_t::shared_ptr> child_joints;
+    std::list<std::shared_ptr<joint_t>> child_joints;
 public:
     glm::mat4 world_transformation;
 };

@@ -12,12 +12,10 @@ namespace unnamed_game {
 
 class armatrue_modifier_t : public modifier_t {
 public:
-    typedef std::shared_ptr<armatrue_modifier_t> shared_ptr;
-
     armatrue_modifier_t();
 
     //armature object
-    object_t::shared_ptr object;
+    std::shared_ptr<object_t> object;
 };
 
 }

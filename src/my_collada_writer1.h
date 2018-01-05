@@ -13,11 +13,11 @@ namespace unnamed_game {
 class my_collada_writer1_t : public COLLADAFW::IWriter {
 // member declarations
 private:
-    unnamed_game::context_t::shared_ptr context;
+    std::shared_ptr<context_t> context;
     std::map<COLLADAFW::UniqueId/*id*/, std::string/*uri*/> unique_id_id_map;
     // public function declarations
 public:
-    explicit my_collada_writer1_t(unnamed_game::context_t::shared_ptr context);
+    explicit my_collada_writer1_t(std::shared_ptr<context_t> context);
 
     ~my_collada_writer1_t() override = default;
 

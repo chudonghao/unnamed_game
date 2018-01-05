@@ -26,7 +26,6 @@ public:
 
 class mesh_t : public has_id_t {
 public:
-    typedef std::shared_ptr<mesh_t> shared_ptr;
 
     mesh_t();
 
@@ -42,7 +41,7 @@ public:
     std::list<std::shared_ptr<modifier_t>> modifiers;
 };
 
-void transfer_data_to_hardware(mesh_t::shared_ptr mesh);
+void transfer_data_to_hardware(std::shared_ptr<mesh_t> mesh);
 
 }
 #endif //UNNAMED_GAME_MESH_H

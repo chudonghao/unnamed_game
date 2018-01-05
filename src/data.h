@@ -17,11 +17,7 @@ namespace unnamed_game {
 
 class data_t : public data_block_t {
 public:
-    typedef std::shared_ptr<data_t> shared_ptr;
-    typedef std::unique_ptr<data_t> unique_ptr;
-
     data_t();
-
     //TODO 是否考虑用set
     id_shared_ptr_map_t<unnamed_game::mesh_t> meshes;
     id_shared_ptr_map_t<unnamed_game::material_t> materials;

@@ -11,8 +11,6 @@ namespace unnamed_game {
 
 class material_t : public has_id_t {
 public:
-    typedef std::shared_ptr<material_t> shared_ptr;
-
 };
 
 }

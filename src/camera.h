@@ -13,7 +13,6 @@ namespace unnamed_game {
 
 class camera_t : public has_id_t {
 public:
-    typedef std::shared_ptr<camera_t> shared_ptr;
     enum class type_e {
         perspective,
         orthographic
@@ -30,9 +29,9 @@ public:
     float far_clipping_plane;
 };
 
-glm::mat4 calculate_look_at_matrix(const object_t::shared_ptr &camera_object);
+glm::mat4 calculate_look_at_matrix(const std::shared_ptr<object_t> &camera_object);
 
-glm::mat4 calculate_perspective_matrix(const camera_t::shared_ptr &camera);
+glm::mat4 calculate_perspective_matrix(const std::shared_ptr<camera_t> &camera);
 
 }
 

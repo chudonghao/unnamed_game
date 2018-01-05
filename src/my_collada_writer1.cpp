@@ -36,7 +36,7 @@ static glm::mat4 to_glm_mat4(const COLLADABU::Math::Matrix4 &m) {
     return result;
 }
 
-my_collada_writer1_t::my_collada_writer1_t(unnamed_game::context_t::shared_ptr context) : context(context) {
+my_collada_writer1_t::my_collada_writer1_t(std::shared_ptr<context_t> context) : context(context) {
 
 }
 
@@ -68,17 +68,19 @@ bool my_collada_writer1_t::writeVisualScene(const COLLADAFW::VisualScene *visual
     //使用栈　进行树形数据结构的迭代
     struct stack_item_t {
         std::string object_parent_name;
-        object_t::shared_ptr object_parent;
-        bone_t::shared_ptr bone_parent;
-        armature_t::shared_ptr armature;
+        std::shared_ptr<object_t> object_parent;
+        std::shared_ptr<bone_t> bone_parent;
+        std::shared_ptr<armature_t> armature;
         COLLADAFW::Node *node;
         int depth;
 
-        stack_item_t(const std::string &object_parent_name, object_t::shared_ptr object_parent, COLLADAFW::Node *node,
+        stack_item_t(const std::string &object_parent_name, std::shared_ptr<object_t> object_parent,
+                     COLLADAFW::Node *node,
                      int depth) : object_parent_name(object_parent_name), object_parent(std::move(object_parent)),
                                   node(node), depth(depth) {}
 
-        stack_item_t(bone_t::shared_ptr bone_parent, armature_t::shared_ptr armature, COLLADAFW::Node *node, int depth)
+        stack_item_t(std::shared_ptr<bone_t> bone_parent, std::shared_ptr<armature_t> armature, COLLADAFW::Node *node,
+                     int depth)
                 : bone_parent(std::move(bone_parent)), armature(std::move(armature)), node(node), depth(depth) {}
     };
     std::stack<stack_item_t> stack;
@@ -145,7 +147,7 @@ bool my_collada_writer1_t::writeVisualScene(const COLLADAFW::VisualScene *visual
                 //骨骼节点
             case COLLADAFW::Node::JOINT: {
                 //骨骼树所属的armature
-                armature_t::shared_ptr armature;
+                std::shared_ptr<armature_t> armature;
                 //armature节点
                 //ture 说明为根JOINT节点
                 if (item.object_parent) {

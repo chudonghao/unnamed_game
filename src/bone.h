@@ -15,13 +15,12 @@ namespace unnamed_game {
 
 class bone_t : public data_block_t {
 public:
-    typedef std::shared_ptr<bone_t> shared_ptr;
     glm::mat4 matrix_local;
-    bone_t::shared_ptr parent;
-    std::set<bone_t::shared_ptr> children;
+    std::shared_ptr<bone_t> parent;
+    std::set<std::shared_ptr<bone_t>> children;
 };
 
-void set_parent(bone_t::shared_ptr &child, bone_t::shared_ptr &parent);
+void set_parent(std::shared_ptr<bone_t> &child, std::shared_ptr<bone_t> &parent);
 
 }
 

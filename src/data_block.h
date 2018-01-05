@@ -12,8 +12,6 @@ namespace unnamed_game {
 
 class data_block_t {
 public:
-    typedef std::shared_ptr<data_block_t> shared_ptr;
-
     virtual ~data_block_t() = default;
 };
 

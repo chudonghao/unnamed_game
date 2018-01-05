@@ -13,9 +13,8 @@ class context_t : public data_block_t {
 public:
     context_t();
 
-    typedef std::shared_ptr<context_t> shared_ptr;
-    data_t::shared_ptr data;
-    scene_t::shared_ptr active_scene;
+    std::shared_ptr<data_t> data;
+    std::shared_ptr<scene_t> active_scene;
 };
 
 }

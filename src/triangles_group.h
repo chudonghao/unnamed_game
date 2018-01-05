@@ -26,7 +26,7 @@ public:
     triangles_group_t() = default;
 
     //TODO 分开静态mesh物体和动态mesh物体
-    material_t::shared_ptr material;
+    std::shared_ptr<material_t> material;
     triangles_group_hardware_data_t hardware_data;
     std::vector<unsigned int> elements;
 };

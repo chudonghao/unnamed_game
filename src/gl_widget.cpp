@@ -95,6 +95,7 @@ void gl_widget_t::initializeGL() {
     } else {
         LOG_W << "Con't find dae file.\n";
     }
+    //Test
     auto f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_0>();
     f->glClearColor(1.f, 1.f, 1.f, 1.f);
     f->glEnable(GL_DEPTH_TEST);
@@ -133,6 +134,7 @@ void gl_widget_t::paintGL() {
     auto f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_0>();
     f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    //Test
     static float tmp = 0.f;
     if (tmp >= 1.f)
         tmp = -1.f;
@@ -142,8 +144,6 @@ void gl_widget_t::paintGL() {
     QMatrix4x4 matrix = QMatrix4x4();
     matrix.translate(tmp, 0.5f, 0.f);
     opengl_shader_program->setUniformValue(uniform_matrix, matrix);
-
-    //Test
     static bool init = false;
     static GLuint vao_id;
     GLuint position_buffer_id;
@@ -184,11 +184,11 @@ void gl_widget_t::paintGL() {
         f->glBindVertexArray(0);
         init = true;
     }
-
     f->glBindVertexArray(vao_id);
     f->glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
     f->glBindVertexArray(0);
     opengl_shader_program->release();
+
     unnamed_game::render(context->active_scene);
     update();
 }

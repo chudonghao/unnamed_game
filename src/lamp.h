@@ -12,7 +12,6 @@ namespace unnamed_game {
 
 class lamp_t : public has_id_t {
 public:
-    typedef std::shared_ptr<lamp_t> shared_ptr;
 
     lamp_t();
 };

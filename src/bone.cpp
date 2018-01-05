@@ -6,7 +6,7 @@
 
 namespace unnamed_game {
 
-void set_parent(bone_t::shared_ptr &child, bone_t::shared_ptr &parent) {
+void set_parent(std::shared_ptr<bone_t> &child, std::shared_ptr<bone_t> &parent) {
     if (child) {
         if (child->parent) {
             child->parent->children.erase(child);

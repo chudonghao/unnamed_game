@@ -14,7 +14,7 @@ namespace unnamed_game {
 
 class object_t : public has_id_t {
 public:
-    typedef std::shared_ptr<object_t> shared_ptr;
+
     enum class type_e {
         undefined,
         armature,
@@ -34,12 +34,12 @@ public:
         glm::mat4 matrix_local;
     };
     glm::mat4 matrix_world;
-    object_t::shared_ptr parent;
-    std::set<object_t::shared_ptr> children;
-    data_block_t::shared_ptr data;
+    std::shared_ptr<object_t> parent;
+    std::set<std::shared_ptr<object_t>> children;
+    std::shared_ptr<has_id_t> data;
 };
 
-void set_parent(object_t::shared_ptr &child, object_t::shared_ptr &parent);
+void set_parent(std::shared_ptr<object_t> &child, std::shared_ptr<object_t> &parent);
 
 }
 

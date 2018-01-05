@@ -37,7 +37,7 @@ public:
 
     skeleton_t();
 
-    std::list<joint_t::shared_ptr> joints;
+    std::list<std::shared_ptr<joint_t>> joints;
 };
 
 
@@ -50,7 +50,7 @@ public:
     ~skeleton_modifier_t() override = default;
 
     //TODO use vertices group
-    std::vector<joint_t::shared_ptr> joints;
+    std::vector<std::shared_ptr<joint_t>> joints;
     std::vector<float> weights;
     std::vector<unsigned int> joint_indices;
     std::vector<unsigned int> weight_indices;
@@ -61,15 +61,14 @@ public:
 
 class scene_t : public has_id_t {
 public:
-    typedef std::shared_ptr<scene_t> shared_ptr;
     /**
      * active camera
      */
-    object_t::shared_ptr active_camera;
-    std::set<object_t::shared_ptr> root_objects;
+    std::shared_ptr<object_t> active_camera;
+    std::set<std::shared_ptr<object_t>> root_objects;
 };
 
-void render(scene_t::shared_ptr scene);
+void render(std::shared_ptr<scene_t> scene);
 
 }
 
