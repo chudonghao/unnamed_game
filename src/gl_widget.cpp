@@ -3,13 +3,20 @@
 //
 
 #include "config.h"
+#include <QApplication>
 #include <QtGui/QOpenGLContext>
+#include <QtGui/QOpenGLFunctions_3_0>
+
 #include <COLLADAFW.h>
 #include <COLLADASaxFWLLoader.h>
+
 #include <boost/filesystem.hpp>
-#include <QtGui/QOpenGLFunctions_3_0>
+#include <boost/program_options.hpp>
+
 #include <glm/gtx/transform.hpp>
+
 #include "gl_widget.h"
+#include "main.h"
 #include "my_collada_writer.h"
 #include "my_collada_writer1.h"
 #include "log.h"
@@ -46,7 +53,8 @@ gl_widget_t::gl_widget_t(QWidget *parent) : QOpenGLWidget(parent) {
 }
 
 void gl_widget_t::initializeGL() {
-    filesystem::path dae_file_path = "second.dae";
+
+    filesystem::path dae_file_path = show_dae_file;
     if (filesystem::is_regular_file(dae_file_path)) {
         COLLADASaxFWL::Loader loader(nullptr);
 

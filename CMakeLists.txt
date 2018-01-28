@@ -8,6 +8,15 @@ set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_AUTOMOC ON)
 
+find_package(Boost 1.60.0
+        COMPONENTS
+        system
+        filesystem
+        thread
+        log
+        log_setup
+        program_options)
+
 find_package(Qt5 COMPONENTS Widgets)
 
 find_package(OpenCOLLADA)
@@ -74,22 +83,25 @@ set(SOURCE_FILES
         src/modifier.cpp
         src/modifier.h
         src/armature_modifier.cpp
-        src/armature_modifier.h)
+        src/armature_modifier.h
+        src/main.h)
 
 include_directories(
         ${CMAKE_SOURCE_DIR}/src
         ${OPENCOLLADA_INCLUDE_DIRS}
+        ${BOOST_INCLUDE_DIRS}
         ${CMAKE_BINARY_DIR}
 )
 
 add_executable(unnamed_game ${SOURCE_FILES})
 target_link_libraries(unnamed_game
         Qt5::Widgets
-        boost_system
-        boost_thread
-        boost_filesystem
-        boost_log_setup
-        boost_log
+        Boost::system
+        #        Boost::thread
+        Boost::filesystem
+        Boost::log_setup
+        Boost::log
+        Boost::program_options
         pthread
         OpenCOLLADAFramework_static
         OpenCOLLADASaxFrameworkLoader_static

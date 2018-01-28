@@ -31,6 +31,7 @@ namespace unnamed_game {
     private:
         QOpenGLShaderProgram *opengl_shader_program;
         std::shared_ptr<unnamed_game::context_t> context;
+
         int attr_pos;
         int attr_col;
         int uniform_matrix;
